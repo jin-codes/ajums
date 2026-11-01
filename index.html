@@ -185,6 +185,8 @@
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz-rYZYXVlEsQCMS4TXhiXPROABPdqtq8RfmclwSGFPV7L_CyG1rpGc8TZ2WSEzt1Uy/exec";   // 앱스 스크립트 웹 앱 배포 URL (…/exec)
 const USE_DB = !!APPS_SCRIPT_URL;
 const IS_ADMIN = location.hash === '#admin' || new URLSearchParams(location.search).has('admin');
+// 이미 열린 페이지에서 주소 뒤 #admin 만 바뀌어도 화면을 다시 불러옴
+addEventListener('hashchange', () => location.reload());
 // 4개 활동 (질문+한마디는 1개로 취급)
 const GROUPS = [
   { name: '작가에게 질문 / 한마디', keys: ['question_to_author', 'one_word'] },
