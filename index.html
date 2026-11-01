@@ -182,7 +182,7 @@
 /* ---------- DB 설정 (구글 시트 + 앱스 스크립트) ----------
    아래 APPS_SCRIPT_URL을 채우세요.
    비워두면 제출 시 이 브라우저(localStorage)에만 저장됩니다. */
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz-rYZYXVlEsQCMS4TXhiXPROABPdqtq8RfmclwSGFPV7L_CyG1rpGc8TZ2WSEzt1Uy/exec";   // 앱스 스크립트 웹 앱 배포 URL (…/exec)
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyuHJeZne4sKvR07oMF4HCRrkXarmVxHCcWHnTQculkMybIeasv8NrHJksqD9skH3tg/exec";   // 앱스 스크립트 웹 앱 배포 URL (…/exec)
 const USE_DB = !!APPS_SCRIPT_URL;
 const IS_ADMIN = location.hash === '#admin' || new URLSearchParams(location.search).has('admin');
 // 이미 열린 페이지에서 주소 뒤 #admin 만 바뀌어도 화면을 다시 불러옴
