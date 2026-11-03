@@ -101,6 +101,10 @@ try { const t = localStorage.getItem('theme'); if (t) document.documentElement.d
   .no { display:inline-flex; align-items:center; justify-content:center; width:1.7em; height:1.7em; margin-right:.4em;
     border-radius:50%; background:var(--blue); color:#fff; font-size:.8em; vertical-align:middle; }
   .no.sub { width:auto; min-width:1.7em; padding:0 .55em; border-radius:999px; }
+  .notice { margin:16px 0 0; padding:12px 16px; border-radius:16px; text-align:center; color:var(--blue);
+    background:color-mix(in srgb, var(--blue) 12%, transparent); border:2px dashed var(--blue); }
+  .notice small { color:var(--muted); }
+  .idbar label { white-space:nowrap; }
   .req::after { content:" *"; color:#d64545; }
   @media (max-width:520px){ table.profile th{width:34%;font-size:.95rem;} h1{font-size:1.6rem;} }
 </style>
@@ -116,6 +120,8 @@ try { const t = localStorage.getItem('theme'); if (t) document.documentElement.d
     <label class="req">학번 <input name="student_id" required inputmode="numeric"></label>
     <label class="req">이름 <input name="student_name" required></label>
   </div>
+
+  <p class="notice">📌 <b>1~4번 활동 중 최소 1개는 꼭 작성</b>해야 제출할 수 있어요.<br><small>(1번은 1-1과 1-2를 모두 작성해야 해요)</small></p>
 
   <section class="pink">
     <h2><span class="no sub">1-1</span>작가에게 질문하기 ✏️</h2>
