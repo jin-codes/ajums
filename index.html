@@ -106,6 +106,18 @@ try { const t = localStorage.getItem('theme'); if (t) document.documentElement.d
   .notice small { color:var(--muted); }
   .idbar label { white-space:nowrap; }
   .req::after { content:" *"; color:#d64545; }
+  .help-btn { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0; width:100%; line-height:1.4; margin:0 0 16px; padding:10px 16px; font-size:1rem;
+    background:transparent; color:var(--blue); border:2px dashed var(--pink); border-radius:16px; }
+  .help-btn small { font-family:'Gowun Dodum'; color:var(--muted); font-size:.8rem; }
+  #help { position:fixed; inset:0; z-index:20; display:flex; flex-direction:column; background:rgba(10,15,30,.72); }
+  #help .sheet { display:flex; flex-direction:column; width:100%; max-width:760px; height:100%; margin:0 auto; background:var(--bg); }
+  #help .bar2 { display:flex; align-items:center; gap:6px; padding:8px 8px 8px 12px; border-bottom:2px solid var(--line); background:var(--card); }
+  #help .tabs { display:flex; gap:6px; flex:1; overflow-x:auto; }
+  #help .tabs button { padding:6px 14px; font-size:.95rem; white-space:nowrap; background:transparent; color:var(--blue); border:2px solid var(--line); }
+  #help .tabs button[aria-selected="true"] { background:var(--blue); color:var(--bg); border-color:var(--blue); }
+  #help .close { width:40px; height:40px; padding:0; flex:none; font-size:1.2rem; background:transparent; color:var(--text); border:2px solid var(--line); }
+  #help .body { flex:1; overflow:auto; -webkit-overflow-scrolling:touch; }
+  #help img { display:block; width:100%; height:auto; }
   @media (max-width:520px){ table.profile th{width:34%;font-size:.95rem;} h1{font-size:1.6rem;} }
 </style>
 </head>
@@ -124,6 +136,7 @@ try { const t = localStorage.getItem('theme'); if (t) document.documentElement.d
   <p class="notice">📌 <b>1~4번 활동 중 최소 1개는 꼭 작성</b>해야 제출할 수 있어요.<br><small>(1번은 1-1과 1-2를 모두 작성해야 해요)</small></p>
 
   <section class="pink">
+    <button type="button" class="help-btn" id="helpOpen">📎 도움 자료 보기 <small>(줄거리 · 인상깊은 문장 · 인물관계도)</small></button>
     <h2><span class="no sub">1-1</span>작가에게 질문하기 ✏️</h2>
     <p class="guide">책을 읽고 작가님께 궁금한 점이나, 꼭 물어보고 싶은 것이 있다면 질문을 적어보세요.</p>
     <textarea name="question_to_author" rows="5" aria-label="작가에게 하는 질문"></textarea>
@@ -196,12 +209,44 @@ try { const t = localStorage.getItem('theme'); if (t) document.documentElement.d
 </div>
 </main>
 
+<div id="help" hidden role="dialog" aria-modal="true" aria-label="1번 활동 도움 자료">
+  <div class="sheet">
+    <div class="bar2">
+      <div class="tabs" role="tablist">
+        <button type="button" role="tab" data-i="1" aria-selected="true">줄거리</button>
+        <button type="button" role="tab" data-i="2" aria-selected="false">인상깊은 문장</button>
+        <button type="button" role="tab" data-i="3" aria-selected="false">인물관계도</button>
+      </div>
+      <button type="button" class="close" id="helpClose" aria-label="닫기">✕</button>
+    </div>
+    <div class="body" id="helpBody"><img id="helpImg" alt="" decoding="async"></div>
+  </div>
+</div>
+
 <script>
 /* ---------- DB 설정 (구글 시트 + 앱스 스크립트) ----------
    아래 APPS_SCRIPT_URL을 채우세요.
    비워두면 제출 시 이 브라우저(localStorage)에만 저장됩니다. */
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyuHJeZne4sKvR07oMF4HCRrkXarmVxHCcWHnTQculkMybIeasv8NrHJksqD9skH3tg/exec";   // 앱스 스크립트 웹 앱 배포 URL (…/exec)
 const USE_DB = !!APPS_SCRIPT_URL;
+// 1번 활동 도움 자료 (평소엔 숨김, 버튼으로 열고 닫음 / 이미지는 열 때만 불러옴)
+(() => {
+  const box = document.getElementById('help'), img = document.getElementById('helpImg'), body = document.getElementById('helpBody');
+  const tabs = [...box.querySelectorAll('[role=tab]')];
+  const show = i => {
+    tabs.forEach(t => t.setAttribute('aria-selected', String(t.dataset.i === String(i))));
+    img.alt = tabs.find(t => t.dataset.i === String(i)).textContent;
+    img.src = `help/${i}.jpg`;
+    body.scrollTop = 0;
+  };
+  const open = () => { box.hidden = false; document.body.style.overflow = 'hidden'; if (!img.getAttribute('src')) show(1); };
+  const close = () => { box.hidden = true; document.body.style.overflow = ''; document.getElementById('helpOpen').focus(); };
+  document.getElementById('helpOpen').addEventListener('click', open);
+  document.getElementById('helpClose').addEventListener('click', close);
+  tabs.forEach(t => t.addEventListener('click', () => show(t.dataset.i)));
+  box.addEventListener('click', e => { if (e.target === box) close(); });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && !box.hidden) close(); });
+})();
 // 다크/라이트 전환 (저장된 선택이 없으면 기기 설정을 따름)
 (() => {
   const root = document.documentElement, btn = document.getElementById('themeBtn');
